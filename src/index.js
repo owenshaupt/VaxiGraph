@@ -11,7 +11,7 @@ import {
   curveBasis
 } from 'd3';
 
-const titleText = 'World Pop. Data';
+const titleText = 'Afghanistan Polio Incidence';
 
 const svg = select('svg');
 
@@ -22,7 +22,7 @@ const render = data => {
   const xValue = d => d.year;
   const xAxisLabelText = 'Year';
   const yValue = d => d.population;
-  const yAxisLabelText = 'Population';
+  const yAxisLabelText = 'Polio Cases';
   const margin = { top: 50, right: 40, bottom: 77, left: 180 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
@@ -96,7 +96,23 @@ const render = data => {
 
 csv('../data/polio_incidence.csv')
   .then(data => {
-    console.log(data)
+    let columns = Object.keys(data[0]);
+
+    const years = columns.map(colHeader => {
+      if (+colHeader) return +colHeader
+    }).filter(
+      header => typeof header === "number"
+    )
+
+    console.log('years', years)
+    console.log('data', data)
+    console.log('data[0]', data[0])
+    console.log('data.columns', data.columns)
+    
+    for (let i = 0; i < years.length; i++) {
+      
+    }
+    
     data.forEach(d => {
       d.population = +d.population * 1000;
       d.year = new Date(d.year);
