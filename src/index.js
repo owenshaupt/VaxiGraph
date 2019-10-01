@@ -1,31 +1,105 @@
-const svg = d3.select('svg');
+import {
+  select,
+  csv,
+  scaleLinear,
+  scaleTime,
+  extent,
+  max,
+  axisLeft,
+  axisBottom,
+  area,
+  curveBasis
+} from 'd3';
 
-const width = +svg.attr('width'); // + parses this as a float
-const height = +svg.attr('height'); // + parses this as a float
+const titleText = 'World Pop. Data';
+
+const svg = select('svg');
+
+const width = +svg.attr('width');
+const height = +svg.attr('height');
 
 const render = data => {
-  const xValue = d => d.population;
-  const yValue = d => d.country;
+  const xValue = d => d.year;
+  const xAxisLabelText = 'Year';
+  const yValue = d => d.population;
+  const yAxisLabelText = 'Population';
+  const margin = { top: 50, right: 40, bottom: 77, left: 180 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+  const circleRadius = 4;
 
-  const xScale = d3.scaleLinear()
-    .domain([0, d3.max(data, d => xValue)])
-    .range([0, width]);
+  const xScale = scaleTime()
+    .domain(extent(data, xValue))
+    .range([0, innerWidth])
+    .nice()
 
-  const yScale = d3.scaleBand()
-    .domain(data.map(d => yValue))
-    .range([0, height]);
+  const yScale = scaleLinear()
+    .domain([0, max(data, yValue)])
+    .range([innerHeight, 0])
+    .nice()
 
-  svg.selectAll('rect').data(data)
-    .enter().append('rect')
-      .attr('y', d => yScale(yValue))
-      .attr('width', d => xScale(xValue))
-      .attr('height', yScale.bandwidth())
-}
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
 
-d3.csv('../data/data.csv')
+  const xAxis = axisBottom(xScale)
+    .tickSize(-innerHeight)
+    .tickPadding(15)
+    .ticks(6)
+
+  const yAxis = axisLeft(yScale)
+    .tickSize(-innerWidth)
+    .tickPadding(15)
+
+  const yAxisG = g.append('g')
+    .call(yAxis)
+
+  yAxisG
+    .selectAll('.domain')
+    .remove();
+
+  yAxisG.append('text')
+    .attr('class', 'axis-label')
+    .attr('y', -60)
+    .attr('x', -innerHeight / 2)
+    .attr('fill', 'black')
+    .attr('transform', `rotate(270)`)
+    .attr('text-anchor', 'middle')
+    .text(yAxisLabelText);
+
+  const xAxisG = g.append('g').call(xAxis)
+    .attr('transform', `translate(0,${innerHeight})`);
+
+  xAxisG.select('.domain').remove();
+
+  xAxisG.append('text')
+    .attr('class', 'axis-label')
+    .attr('y', 65)
+    .attr('x', innerWidth / 2)
+    .attr('fill', 'black')
+    .text(xAxisLabelText);
+
+  const areaGenerator = area()
+    .x(d => xScale(xValue(d)))
+    .y0(innerHeight)
+    .y1(d => yScale(yValue(d)))
+    .curve(curveBasis)
+
+  g.append('path')
+    .attr('class', 'area-path')
+    .attr('d', areaGenerator(data))
+
+  g.append('text')
+    .attr('class', 'title')
+    .attr('y', -10)
+    .text(titleText);
+};
+
+csv('../data/polio_incidence.csv')
   .then(data => {
+    console.log(data)
     data.forEach(d => {
       d.population = +d.population * 1000;
+      d.year = new Date(d.year);
     });
     render(data);
-  })
+  });

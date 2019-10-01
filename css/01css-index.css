@@ -1,3 +1,15 @@
 body {
   overflow: hidden;
 }
+
+circle {
+  fill: steelblue;
+}
+
+text {
+  font-size: 1.4em;
+}
+
+.line-path {
+  fill: maroon;
+}
