@@ -11,5 +11,8 @@ text {
 }
 
 .line-path {
-  fill: maroon;
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
 }
