@@ -18,30 +18,36 @@ import {
 } from 'd3';
 
 import UIControls from './ui_controls';
-import { COUNTRY_CODES } from './country_codes'; // to pull name for titleText
+import { COUNTRY_CODES_OBJ, COUNTRY_CODES_ARR } from './country_codes'; // to pull name for titleText
 
-let selectedCountry;
 
 const receiveUserSelection = () => {
   document.getElementById('user-country-select')
   .addEventListener('change', handleChange);
 }
 
+let countryName;
 let incidenceArr = [];
 let coverageArr = [];
+let countryIdx;
+let titleText = 'bleh';
 
 const handleChange = e => {
   const countryCode = e.target.value;
-  console.log(countryCode);
-  selectedCountry = countryCode;
+  countryName = COUNTRY_CODES_OBJ[countryCode];
+  console.log('countryCode', countryCode);
+  countryIdx = COUNTRY_CODES_ARR.indexOf(countryCode)
+  console.log('countryIdx', countryIdx);
   incidenceArr = [];
   coverageArr = [];
+  loadData(countryIdx);
+  d3.selectAll("svg > *").remove();
+  titleText = `${ countryName } Polio Incidence`;
   render(incidenceArr);
   render(coverageArr);
 }
 
 
-let titleText = `${ COUNTRY_CODES[selectedCountry] } Polio Incidence`;
 
 const svg = select('svg');
 
@@ -49,8 +55,6 @@ const width = +svg.attr('width');
 const height = +svg.attr('height');
 
 const render = data => {
-  console.log('data', data)
-
   const xValue = d => d.year;
   const xAxisLabel = 'Year';
 
@@ -88,7 +92,7 @@ const render = data => {
     .tickSize(-innerHeight)
     .tickPadding(15)
     .tickFormat(format(""))
-    // .ticks(6)
+    .ticks(6)
 
   const y1Axis = axisLeft(y1Scale)
     .tickSize(-innerWidth)
@@ -172,7 +176,65 @@ const render = data => {
     .text(titleText);
 };
 
-const loadData
+const loadData = countryIdx => {
+  csv('../data/polio_incidence.csv')
+    .then(data => {
+      receiveUserSelection()
+      const columns = Object.keys(data[countryIdx]);
+      const countries = data.map(d => d.Cname);
+      const years = columns.map(colHeader => {
+        if (+colHeader) return +colHeader
+      }).filter(
+        header => typeof header === "number"
+      )
+
+      // console.log('countries', countries)
+      // console.log('years', years)
+      // console.log('data', data)
+      // console.log('data[0]', data[0])
+      // console.log('data.columns', data.columns)
+
+      // const incidenceArr = [];
+
+      years.forEach(y => {
+        const obj = {};
+        // obj.country = countries[0];
+        obj.year = y;
+        obj.incidence = +data[countryIdx][y];
+        incidenceArr.push(obj)
+      });
+
+      render(incidenceArr);
+    });
+
+  csv('../data/polio_coverage_estimates.csv')
+    .then(data => {
+      const columns = Object.keys(data[countryIdx]);
+      const countries = data.map(d => d.Cname);
+      const years = columns.map(colHeader => {
+        if (+colHeader) return +colHeader
+      }).filter(
+        header => typeof header === "number"
+      )
+
+      // console.log('countries', countries)
+      // console.log('years', years)
+      // console.log('coverage data', data)
+      // console.log('data[0]', data[0])
+      // console.log('data.columns', data.columns)
+
+      // const coverageArr = [];
+
+      years.forEach(y => {
+        const obj = {};
+        obj.year = y;
+        obj.coverage = +data[countryIdx][y];
+        coverageArr.push(obj)
+      })
+
+      render(coverageArr);
+    })
+}
 
 csv('../data/polio_incidence.csv')
   .then(data => {
