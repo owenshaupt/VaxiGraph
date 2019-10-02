@@ -2,17 +2,47 @@ body {
   overflow: hidden;
 }
 
-circle {
-  fill: steelblue;
+.master {
+  display: flex;
+  flex-direction: column;
+  margin: 0px auto;
+}
+
+.user-country-selector {
+  width: fit-content;
+  margin: 0px auto;
+}
+
+.incidence-dot {
+  fill: none;
+}
+
+.coverage-dot {
+  fill: none;
 }
 
 text {
-  font-size: 1.4em;
+  font-size: 2.2em;
 }
 
-.line-path {
+.tick {
+  font-size: .65em;
+}
+
+.incidence-path {
   fill: none;
   stroke: steelblue;
-  stroke-width: 1.5;
+  stroke-width: 2;
   stroke-linejoin: round;
+}
+
+.coverage-path {
+  fill: none;
+  stroke: plum;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.tick line {
+  stroke: rgb(153, 153, 153)
 }
