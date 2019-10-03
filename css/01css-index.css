@@ -1,5 +1,7 @@
 body {
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .master {
@@ -23,24 +25,36 @@ body {
 
 text {
   font-size: 2.2em;
+  font-family: 'helvetica';
+  font-weight: thin
+}
+
+text.title {
+  font-family: 'helvetica';
+  font-weight: thin
 }
 
 .tick {
   font-size: .65em;
 }
 
-.incidence-path {
+path {
+  /* path elements preset for border stroke */
+  stroke: rgb(153, 153, 153);
+}
+
+.path {
   fill: none;
+  stroke-width: 3;
+  stroke-linejoin: round
+}
+
+.incidence-path {
   stroke: steelblue;
-  stroke-width: 2;
-  stroke-linejoin: round;
 }
 
 .coverage-path {
-  fill: none;
   stroke: plum;
-  stroke-width: 2;
-  stroke-linejoin: round;
 }
 
 .tick line {
