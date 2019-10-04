@@ -60,3 +60,9 @@ path {
 .tick line {
   stroke: rgb(153, 153, 153)
 }
+
+.moving-label {
+  z-index: 5;
+  font-size: 1em;
+  color: black;
+}

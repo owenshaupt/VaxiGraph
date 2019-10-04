@@ -1,20 +1,6 @@
-import {
-  select,
-  csv,
-  scaleLinear,
-  scaleTime,
-  extent,
-  min,
-  max,
-  axisLeft,
-  axisRight,
-  axisBottom,
-  line,
-  curveMonotoneX,
-  format,
-  easeLinear,
-  color
-} from 'd3';
+import { select,selectAll,csv,scaleLinear,scaleTime,extent,min,max,axisLeft,
+  axisRight,axisBottom,line,curveMonotoneX,format,easeCubic,color,event,mouse,
+  point,bisector} from 'd3';
 
 import UIControls from './ui_controls';
 import { COUNTRY_CODES_OBJ, COUNTRY_CODES_ARR } from './country_codes';
@@ -51,32 +37,24 @@ const height = +svg.attr('height');
 const render = data => {
   // xValue is a function which extracts "year" from data
   const xValue = d => d.year;
-  // xAxisLabel is the text for the axis label
   const xAxisLabel = 'Year';
 
   // y1Value is a function which extracts "incidence" from data
   const y1Value = d => d.incidence;
-
-  const circleRadius = 4; // ?????
-  // y1AxisLabel is the text for the axis label
   const y1AxisLabel = 'New Polio Cases';
   
   // y2Value is a function which extracts "coverage" from data
   const y2Value = d => d.coverage;
-  // const circleRadius = 4;
-  // y2AxisLabel is the text for the axis label
   const y2AxisLabel = 'Polio Vaccine Coverage';
 
-
-  // these three just maths
   const margin = { top: 100, right: 200, bottom: 100, left: 200 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
   // sets the scale of x axis to be linear representation of time
   const xScale = scaleTime()
-    .domain(extent(data, xValue)) // sets observable values
-    .range([0, innerWidth]) // sets the output range (pixels on screen)
+    .domain(extent(data, xValue))
+    .range([0, innerWidth])
     // .nice() // extend the domain to nice round numbers
 
   const y1Scale = scaleLinear()
@@ -115,7 +93,7 @@ const render = data => {
 
   // sets attributes on a new text element
   y1AxisG.append('text')
-    .attr('class', 'axis-label')
+    .attr('class', 'axis-label incidence-text')
     .attr('y', -100)
     .attr('x', -innerHeight / 2)
     .attr('fill', 'black')
@@ -127,7 +105,7 @@ const render = data => {
   // y2AxisG.selectAll('.domain').remove();
 
   y2AxisG.append('text')
-    .attr('class', 'axis-label')
+    .attr('class', 'axis-label coverage-text')
     .attr('y', -innerWidth - 80)
     .attr('x', innerHeight / 2)
     .attr('fill', 'black')
@@ -147,53 +125,57 @@ const render = data => {
     .attr('fill', 'black')
     .text(xAxisLabel);
 
-  g.selectAll('.incidence-dot').data((data.every(d => d.incidence !== undefined) ? data : {}))
-    .enter().append('circle')
-      .attr('cy', d => y1Scale(y1Value(d)))
-      .attr('cx', d => xScale(xValue(d)))
-      // .attr('r', circleRadius)
-      .attr('class', 'incidence-dot')
+  // debugger
+  // g.selectAll('.incidence-dot').data((Object.values(data).every(d => d.incidence !== undefined) ? data : {}))
+  //   .enter().append('circle')
+  //     .attr('cy', d => y1Scale(y1Value(d)))
+  //     .attr('cx', d => xScale(xValue(d)))
+  //     // .attr('r', circleRadius)
+  //     .attr('class', 'incidence-dot')
 
-  g.selectAll('.coverage-dot').data((data.every(d => d.coverage !== undefined) ? data : {}))
-    .enter().append('circle')
-      .attr('cy', d => y2Scale(y2Value(d)))
-      .attr('cx', d => xScale(xValue(d)))
-      // .attr('r', circleRadius)
-      .attr('class', 'coverage-dot')
 
-  // creating line
-  const y1LineGenerator = line()
-    .x(d => xScale(xValue(d))) // set x accessor
-    .y(d => y1Scale(y1Value(d))) // set y accessor
-    .curve(curveMonotoneX)
+  // if (Object.values(data).every(d => d.coverage !== undefined)) {
+  //   g.selectAll('.coverage-dot').data(data)
+  //     .enter().append('circle')
+  //       .attr('cy', d => y2Scale(y2Value(d)))
+  //       .attr('cx', d => xScale(xValue(d)))
+  //       // .attr('r', circleRadius)
+  //       .attr('class', 'coverage-dot')
+  // }
 
-  const y1Path = g.append('path')
-    .attr('class', 'path graph-path incidence-path')
-    .attr('d', y1LineGenerator(data))
+//--------------------------drawing line + effect-------------------------------//
+  if (data.every(d => d.incidence !== undefined)) {
+    const y1LineGenerator = line()
+      .x(d => xScale(xValue(d))) // set x accessor
+      .y(d => y1Scale(y1Value(d))) // set y accessor
+      .curve(curveMonotoneX)
 
-  const totalLengthY1 = y1Path.node().getTotalLength();
+    const y1Path = g.append('path')
+      .attr('class', 'path graph-path incidence-path')
+      .attr('d', y1LineGenerator(data))
 
-  y1Path
-    // sets length of dashes and makes line dashed
-    // two lengths set (respectively) the dash length and space between dashes
-    .attr("stroke-dasharray", totalLengthY1 + " " + totalLengthY1)
-    // sets offset to where the first dash starts
-    // (totalLength is at original ending)
-    .attr("stroke-dashoffset", totalLengthY1)
-    .transition()
-      .duration(3000)
-      // defaults to easeCubic
-      // .ease(easeLinear) // describes speed of line drawing from beginning to end
-      // sets the offset to 0 (via transition)
-      .attr("stroke-dashoffset", 0);
+    const totalLengthY1 = y1Path.node().getTotalLength();
+      
+    y1Path
+      .attr("stroke-dasharray", totalLengthY1 + " " + totalLengthY1)
+      .attr("stroke-dashoffset", totalLengthY1)
+      .transition()
+        .duration(3000)
+        .ease(easeCubic)
+        .attr("stroke-dashoffset", 0);
 
-  // creating line
+    let unwantedY1Paths = document.getElementsByClassName('incidence-path');
+    for (let i = 0; i < unwantedY1Paths.length; i++) {
+      const ele = unwantedY1Paths[i];
+      if (ele.getAttribute('d') === null) ele.remove()
+    }
+  }
+
   const y2LineGenerator = line()
     .x(d => xScale(xValue(d))) // set x accessor
     .y(d => y2Scale(y2Value(d))) // set y accessor
     .curve(curveMonotoneX)
 
-  // actually draw lines
   const y2Path = g.append('path')
     .attr('class', 'path graph-path coverage-path')
     .attr('d', y2LineGenerator(data))
@@ -205,9 +187,14 @@ const render = data => {
     .attr("stroke-dashoffset", totalLengthY2)
     .transition()
       .duration(3000)
-      // deafaults to easeCubic
-      // .ease(easeLinear) // describes speed of line drawing from beginning to end
+      .ease(easeCubic)
       .attr("stroke-dashoffset", 0);
+
+  let unwantedY2Paths = document.getElementsByClassName('coverage-path');
+  for (let i = 0; i < unwantedY2Paths.length; i++) {
+    const ele = unwantedY2Paths[i];
+    if (ele.getAttribute('d') === null) ele.remove()
+  }
 
 //--------------------------mouseover line effect-----------------------------//
   const mouseG = g.append('g')
@@ -219,7 +206,6 @@ const render = data => {
     .style("opacity", "0");
 
   let lines = document.getElementsByClassName('path');
-  console.log(lines);
 
   const mousePerLine = mouseG.selectAll('.mouse-per-line')
     .data(data)
@@ -228,79 +214,174 @@ const render = data => {
     .attr("class", "mouse-per-line");
   
   mousePerLine.append('circle')
+    .style("opacity", "0")
+    .attr('class', 'moving-circle')
     .attr("r", 7)
-    .style("stroke", d => {return color(d.name)})
+    .style("stroke", 'black') //d => {return color(d.name)})
     .style("fill", "none")
     .style("stroke-width", "1px")
-    .style("opacity", "0");
 
   mousePerLine.append("text")
-    .attr("transform", "translate(10,3)");
+    .style('opacity', '0')
+    .attr('class', 'moving-label')
+    .attr("transform", "translate(10,20)");
 
-  mouseG.append('rect') // append a rect to catch mouse movements on canvas
-    .attr('width', width) // can't catch mouse events on a g element
-    .attr('height', height)
+
+
+
+  // console.log('mousePerLine', mousePerLine);
+  // debugger
+
+  const deleteNodes = () => {
+    return new Promise(resolve => {
+      let movingLabels = document.getElementsByClassName('moving-label');
+      let movingCircles = document.getElementsByClassName('moving-circle');
+
+      for (let i = 1; i < movingLabels.length; i++) {
+        const node = movingLabels[i];
+        node.remove();
+      }
+
+      for (let i = 1; i < movingCircles.length; i++) {
+        const node = movingCircles[i];
+        node.remove();
+      }
+      
+      resolve();
+    })
+  }
+
+
+  // do this shit THEN .append rect
+    
+
+    //   selectAll('.to-delete').remove();
+    //   selectAll('.to-delete').remove();
+
+  deleteNodes()
+  .then(() => mouseG.append('rect') // append a rect to catch mouse movements on canvas
+    .style("opacity", "0")
+    .attr('width', innerWidth) // can't catch mouse events on a g element
+    .attr('height', innerHeight)
+    .attr('id', 'mouse-rect')
     .attr('fill', 'none')
     .attr('pointer-events', 'all')
-    .on('mouseout', () => { // on mouse out hide line, circles and text
-      d3.select(".mouse-line")
-        .style("opacity", "0");
-      d3.selectAll(".mouse-per-line circle")
-        .style("opacity", "0");
-      d3.selectAll(".mouse-per-line text")
-        .style("opacity", "0");
+    .on('mouseout', () => { // on mouseout, hide line, circles and text
+      select(".mouse-line")
+        .transition()
+          .duration(1000)
+          .style("opacity", "0");
+      selectAll(".mouse-per-line circle")
+        .transition()
+          .duration(1000)
+          .style("opacity", "0");
+      selectAll(".mouse-per-line text")
+        .transition()
+          .duration(1000)
+          .style("opacity", "0");
     })
-    .on('mouseover', () => { // on mouse in show line, circles and text
-      d3.select(".mouse-line")
-        .style("opacity", "1");
-      d3.selectAll(".mouse-per-line circle")
-        .style("opacity", "1");
-      d3.selectAll(".mouse-per-line text")
-        .style("opacity", "1");
+    .on('mouseover', () => { // on mouseover, show line, circles and text
+      select(".mouse-line")
+        .style("opacity", "0")
+        .transition()
+          .duration(500)
+          .style('opacity', '1');
+      selectAll(".mouse-per-line circle")
+        .style("opacity", "0")
+        .transition()
+        .duration(500)
+        .style('opacity', '1');
+      selectAll(".mouse-per-line text")
+        .style("opacity", "0")
+        .transition()
+        .duration(500)
+        .style('opacity', '1');
+
+      let movingLabels = document.getElementsByClassName('moving-label');
+
+      for (let i = 1; i < movingLabels.length; i++) {
+        const node = movingLabels[i];
+        node.remove();
+      }
+
+      selectAll('.to-delete').remove();
+
+      let movingCircles = document.getElementsByClassName('moving-circle');
+
+      for (let i = 1; i < movingCircles.length; i++) {
+        const node = movingCircles[i];
+        node.remove();
+      }
+
+      selectAll('.to-delete').remove();
+
+      
     })
-    .on('mousemove', () => { // mouse moving over canvas
-      console.log(this)
-      const mouse = d3.mouse(this);
-      d3.select(".mouse-line")
-        .attr("d", function () {
-          const d = "M" + mouse[0] + "," + height;
-          d += " " + mouse[0] + "," + 0;
+    .on('mousemove', () => { // mouse moving over graph
+      let movingLabels = document.getElementsByClassName('moving-label');
+
+      for (let i = 1; i < movingLabels.length; i++) {
+        const node = movingLabels[i];
+        node.remove();
+      }
+
+      selectAll('.to-delete').remove();
+
+      let movingCircles = document.getElementsByClassName('moving-circle');
+
+      for (let i = 1; i < movingCircles.length; i++) {
+        const node = movingCircles[i];
+        node.remove();
+      }
+
+      selectAll('.to-delete').remove();
+
+      let container = document.getElementById('mouse-rect')
+      let mouseXY = mouse(container);
+      select(".mouse-line")
+        .attr("d", () => {
+          let d = "M" + mouseXY[0] + "," + innerHeight;
+          d += " " + mouseXY[0] + "," + 0;
           return d;
         });
 
-      d3.selectAll(".mouse-per-line")
+      selectAll(".mouse-per-line")
         .attr("transform", function (d, i) {
-          console.log(width / mouse[0])
-          const xDate = x.invert(mouse[0]),
-            bisect = d3.bisector(d => { return d.year; }).right;
-          idx = bisect(d.values, xDate);
+          let xYear = xScale.invert(mouseXY[0]),
+            bisect = bisector(d => { return d.year; }).right;
+          let idx = bisect(Object.values(d), xYear);
 
-          const beginning = 0,
-            end = lines[i].getTotalLength(),
-            target = null;
+          let beginning = 0;
+          let end = (lines[i] ? lines[i].getTotalLength() : 0);
+          let target = null;
+
+          let pos;
 
           while (true) {
             target = Math.floor((beginning + end) / 2);
-            pos = lines[i].getPointAtLength(target);
-            if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+            pos = (lines[i] ? lines[i].getPointAtLength(target) : {x:0, y:0});
+            if ((target === end || target === beginning) && pos.x !== mouseXY[0]) {
               break;
             }
-            if (pos.x > mouse[0]) end = target;
-            else if (pos.x < mouse[0]) beginning = target;
+            if (pos.x > mouseXY[0]) end = target;
+            else if (pos.x < mouseXY[0]) beginning = target;
             else break; //position found
           }
 
-          d3.select(this).select('text')
-            .text(y.invert(pos.y).toFixed(2));
+          select(this).select('text')
+            .text(y2Scale.invert(pos.y).toFixed(2));
+          console.log(y2Scale)
 
-          return "translate(" + mouse[0] + "," + pos.y + ")";
+          return "translate(" + mouseXY[0] + "," + pos.y + ")";
         });
       })
-
+  )
   // draw title
   g.append('text')
     .attr('class', 'title')
     .attr('y', -10)
+    .attr('x', innerWidth / 2)
+    .attr('text-anchor', 'middle')
     .text(titleText);
 };
 
@@ -365,7 +446,7 @@ csv('../data/polio_incidence.csv')
       incidenceArr.push(obj)
     });
 
-    render({});
+    render([]);
   });
 
 csv('../data/polio_coverage_estimates.csv')
@@ -385,5 +466,5 @@ csv('../data/polio_coverage_estimates.csv')
       coverageArr.push(obj)
     })
 
-    render({});
+    render([]);
   })
