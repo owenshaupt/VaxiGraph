@@ -2,8 +2,8 @@ import { select,selectAll,csv,scaleLinear,scaleTime,extent,min,max,axisLeft,
   axisRight,axisBottom,line,curveMonotoneX,format,easeCubic,color,event,mouse,
   point,bisector} from 'd3';
 
-import UIControls from './ui_controls';
 import { COUNTRY_CODES_OBJ, COUNTRY_CODES_ARR } from './country_codes';
+import { deleteNodes } from './delete_nodes';
 
 const receiveUserSelection = () => {
   document.getElementById('user-country-select')
@@ -55,12 +55,11 @@ const render = data => {
   const xScale = scaleTime()
     .domain(extent(data, xValue))
     .range([0, innerWidth])
-    // .nice() // extend the domain to nice round numbers
 
   const y1Scale = scaleLinear()
     .domain([0, max(data, y1Value)])
     .range([innerHeight, 0])
-    .nice()
+    .nice() // extend the domain to nice round numbers
 
   const y2Scale = scaleLinear()
     .domain([0, 100])
@@ -73,7 +72,7 @@ const render = data => {
 
   // create a new bottom-oriented axis generator
   const xAxis = axisBottom(xScale)
-    .tickSize(-innerHeight) // set the size of the ticks
+    .tickSize(-innerHeight) // set the size of the ticks (a tick is a line that goes across the graph)
     .tickPadding(15) // set the padding between ticks and labels
     .tickFormat(format("")) // set the tick format explicitly
     .ticks(9) // customize how ticks are generated and formatted
@@ -226,38 +225,6 @@ const render = data => {
     .attr('class', 'moving-label')
     .attr("transform", "translate(10,20)");
 
-
-
-
-  // console.log('mousePerLine', mousePerLine);
-  // debugger
-
-  const deleteNodes = () => {
-    return new Promise(resolve => {
-      let movingLabels = document.getElementsByClassName('moving-label');
-      let movingCircles = document.getElementsByClassName('moving-circle');
-
-      for (let i = 1; i < movingLabels.length; i++) {
-        const node = movingLabels[i];
-        node.remove();
-      }
-
-      for (let i = 1; i < movingCircles.length; i++) {
-        const node = movingCircles[i];
-        node.remove();
-      }
-      
-      resolve();
-    })
-  }
-
-
-  // do this shit THEN .append rect
-    
-
-    //   selectAll('.to-delete').remove();
-    //   selectAll('.to-delete').remove();
-
   deleteNodes()
   .then(() => mouseG.append('rect') // append a rect to catch mouse movements on canvas
     .style("opacity", "0")
@@ -281,6 +248,8 @@ const render = data => {
           .style("opacity", "0");
     })
     .on('mouseover', () => { // on mouseover, show line, circles and text
+      deleteNodes();
+
       select(".mouse-line")
         .style("opacity", "0")
         .transition()
@@ -296,48 +265,13 @@ const render = data => {
         .transition()
         .duration(500)
         .style('opacity', '1');
-
-      let movingLabels = document.getElementsByClassName('moving-label');
-
-      for (let i = 1; i < movingLabels.length; i++) {
-        const node = movingLabels[i];
-        node.remove();
-      }
-
-      selectAll('.to-delete').remove();
-
-      let movingCircles = document.getElementsByClassName('moving-circle');
-
-      for (let i = 1; i < movingCircles.length; i++) {
-        const node = movingCircles[i];
-        node.remove();
-      }
-
-      selectAll('.to-delete').remove();
-
-      
     })
     .on('mousemove', () => { // mouse moving over graph
-      let movingLabels = document.getElementsByClassName('moving-label');
-
-      for (let i = 1; i < movingLabels.length; i++) {
-        const node = movingLabels[i];
-        node.remove();
-      }
-
-      selectAll('.to-delete').remove();
-
-      let movingCircles = document.getElementsByClassName('moving-circle');
-
-      for (let i = 1; i < movingCircles.length; i++) {
-        const node = movingCircles[i];
-        node.remove();
-      }
-
-      selectAll('.to-delete').remove();
+      deleteNodes();
 
       let container = document.getElementById('mouse-rect')
       let mouseXY = mouse(container);
+
       select(".mouse-line")
         .attr("d", () => {
           let d = "M" + mouseXY[0] + "," + innerHeight;
@@ -347,14 +281,17 @@ const render = data => {
 
       selectAll(".mouse-per-line")
         .attr("transform", function (d, i) {
-          let xYear = xScale.invert(mouseXY[0]),
-            bisect = bisector(d => { return d.year; }).right;
-          let idx = bisect(Object.values(d), xYear);
+          // let xYear = xScale.invert(mouseXY[0]);
+          // console.log('xYear', xYear)
+          // let bisect = bisector(d => { return d.year; }).right;
+          // console.log('bisect', bisect)
+          // let idx = bisect(Object.values(d), xYear);
+          // console.log('idx', idx)
+          console.log('d', d)
 
           let beginning = 0;
           let end = (lines[i] ? lines[i].getTotalLength() : 0);
           let target = null;
-
           let pos;
 
           while (true) {
