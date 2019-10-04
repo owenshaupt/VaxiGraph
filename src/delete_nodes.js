@@ -1,8 +1,8 @@
-export const deleteNodes = () => {
+export const deleteNodes = (label, circle, line) => {
   return new Promise(resolve => {
-    let movingLabels = document.getElementsByClassName('moving-label');
-    let movingCircles = document.getElementsByClassName('moving-circle');
-    let perLineG = document.getElementsByClassName('mouse-per-line');
+    let movingLabels = document.getElementsByClassName(`${label}`);
+    let movingCircles = document.getElementsByClassName(`${circle}`);
+    let perLineG = document.getElementsByClassName(`${line}`);
 
     for (let i = 1; i < movingLabels.length; i++) {
       const node = movingLabels[i];

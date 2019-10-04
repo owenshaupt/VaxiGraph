@@ -22,11 +22,15 @@ const handleChange = e => {
   countryIdx = COUNTRY_CODES_ARR.indexOf(countryCode)
   incidenceArr = [];
   coverageArr = [];
-  loadData(countryIdx);
   d3.selectAll("svg > *").remove();
+  loadData(countryIdx);
+  // debugger
   titleText = `${ countryName } Polio Incidence`;
-  render(incidenceArr);
-  render(coverageArr);
+  // Promise.all(
+    // render(incidenceArr))
+      // .then(() => {
+        // render(coverageArr);
+  // })
 }
 
 const svg = select('svg');
@@ -87,7 +91,6 @@ const render = data => {
 
   // creates a yAxis group where we append a g element
   const y1AxisG = g.append('g').call(y1Axis) // call .append on y1Axis
-    .attr('class', 'testytesty')
   y1AxisG.selectAll('.domain').remove() // remove elements with class 'domain'
 
   // sets attributes on a new text element
@@ -124,15 +127,15 @@ const render = data => {
     .attr('fill', 'black')
     .text(xAxisLabel);
 
-  // debugger
+  // don't need these unless we want to show circles
+  //
   // g.selectAll('.incidence-dot').data((Object.values(data).every(d => d.incidence !== undefined) ? data : {}))
   //   .enter().append('circle')
   //     .attr('cy', d => y1Scale(y1Value(d)))
   //     .attr('cx', d => xScale(xValue(d)))
   //     // .attr('r', circleRadius)
   //     .attr('class', 'incidence-dot')
-
-
+  // 
   // if (Object.values(data).every(d => d.coverage !== undefined)) {
   //   g.selectAll('.coverage-dot').data(data)
   //     .enter().append('circle')
@@ -142,7 +145,7 @@ const render = data => {
   //       .attr('class', 'coverage-dot')
   // }
 
-//--------------------------drawing line + effect-------------------------------//
+//--------------------------drawing line + effect-----------------------------//
   if (data.every(d => d.incidence !== undefined)) {
     const y1LineGenerator = line()
       .x(d => xScale(xValue(d))) // set x accessor
@@ -154,22 +157,138 @@ const render = data => {
       .attr('d', y1LineGenerator(data))
 
     const totalLengthY1 = y1Path.node().getTotalLength();
-      
+
     y1Path
       .attr("stroke-dasharray", totalLengthY1 + " " + totalLengthY1)
       .attr("stroke-dashoffset", totalLengthY1)
       .transition()
-        .duration(3000)
-        .ease(easeCubic)
-        .attr("stroke-dashoffset", 0);
+      .duration(3000)
+      .ease(easeCubic)
+      .attr("stroke-dashoffset", 0);
 
-    let unwantedY1Paths = document.getElementsByClassName('incidence-path');
-    for (let i = 0; i < unwantedY1Paths.length; i++) {
-      const ele = unwantedY1Paths[i];
+    let y1Paths = document.getElementsByClassName('incidence-path');
+    for (let i = 0; i < y1Paths.length; i++) {
+      const ele = y1Paths[i];
       if (ele.getAttribute('d') === null) ele.remove()
     }
-  }
 
+//--------------------------mouseover line effect-----------------------------//
+    // const mouseG = g.append('g')
+    // console.log('mouseG 1', mouseG)
+    //   // .attr('class', 'mouse-over-effects');
+    // mouseG.append('path')
+    //   .attr("class", "mouse-line-y1")
+    //   .style("stroke", "black")
+    //   .style("stroke-width", "1px")
+    //   .style("opacity", "0");
+
+    // let lines = document.getElementsByClassName('incidence-path');
+
+    // const mousePerLine = mouseG.selectAll('.mouse-per-line-y1')
+    //   .data(data)
+    //   .enter()
+    //   .append("g")
+    //   .attr("class", "mouse-per-line-y1");
+
+    // mousePerLine.append('circle')
+    //   .style("opacity", "0")
+    //   .attr('class', 'moving-circle-y1')
+    //   .attr("r", 7)
+    //   .style("stroke", 'black') //d => {return color(d.name)})
+    //   .style("fill", "none")
+    //   .style("stroke-width", "1px")
+
+    // mousePerLine.append("text")
+    //   .style('opacity', '0')
+    //   .attr('class', 'label moving-label-y1')
+    //   .attr("transform", "translate(10,20)");
+
+    // deleteNodes("moving-label-y1", "moving-circle-y1", "mouse-per-line-y1")
+    //   .then(() => mouseG.append('rect') // append a rect to catch mouse movements on canvas
+    //     .style("opacity", "0")
+    //     .attr('width', innerWidth) // can't catch mouse events on a g element
+    //     .attr('height', innerHeight)
+    //     .attr('id', 'mouse-rect')
+    //     // .attr('id', 'mouse-rect-y1')
+    //     .attr('fill', 'none')
+    //     .attr('pointer-events', 'all')
+    //     .on('mouseout', () => { // on mouseout, hide line, circles and text
+    //       select(".mouse-line-y1")
+    //         .transition()
+    //         .duration(1000)
+    //         .style("opacity", "0");
+    //       selectAll(".mouse-per-line-y1 .moving-circle-y1")
+    //         .transition()
+    //         .duration(1000)
+    //         .style("opacity", "0");
+    //       selectAll(".mouse-per-line-y1 .moving-label-y1")
+    //         .transition()
+    //         .duration(1000)
+    //         .style("opacity", "0");
+    //     })
+    //     .on('mouseover', () => { // on mouseover, show line, circles and text
+    //       deleteNodes("moving-label-y1", "moving-circle-y1", "mouse-per-line-y1");
+
+    //       select(".mouse-line-y1")
+    //         .style("opacity", "0")
+    //         .transition()
+    //         .duration(500)
+    //         .style('opacity', '1');
+    //       selectAll(".mouse-per-line-y1 .moving-circle-y1")
+    //         .style("opacity", "0")
+    //         .transition()
+    //         .duration(500)
+    //         .style('opacity', '1');
+    //       selectAll(".mouse-per-line-y1 text")
+    //         .style("opacity", "0")
+    //         .transition()
+    //         .duration(500)
+    //         .style('opacity', '1');
+    //     })
+    //     .on('mousemove', () => { // mouse moving over graph
+    //       deleteNodes("moving-label-y1", "moving-circle-y1", "mouse-per-line-y1");
+
+    //       let container = document.getElementById('mouse-rect')
+    //       // let container = document.getElementById('mouse-rect-y1')
+    //       let mouseXY = mouse(container);
+
+    //       select(".mouse-line-y1")
+    //         .attr("d", () => {
+    //           let d = "M" + mouseXY[0] + "," + innerHeight;
+    //           d += " " + mouseXY[0] + "," + 0;
+    //           return d;
+    //         });
+
+    //       selectAll(".mouse-per-line-y1")
+    //         .attr("transform", function (d, i) {
+    //           let beginning = 0;
+    //           let end = (lines[i] ? lines[i].getTotalLength() : 0);
+    //           let target = null;
+    //           let pos;
+
+    //           while (true) {
+    //             target = Math.floor((beginning + end) / 2);
+    //             pos = (lines[i] ? lines[i].getPointAtLength(target) : { x: 0, y: 0 });
+    //             if ((target === end || target === beginning) && pos.x !== mouseXY[0]) {
+    //               break;
+    //             }
+    //             if (pos.x > mouseXY[0]) end = target;
+    //             else if (pos.x < mouseXY[0]) beginning = target;
+    //             else break; //position found
+    //           }
+
+    //           select(this).select('.moving-label-y1')
+    //             .text(y1Scale.invert(pos.y).toFixed(0)); // this appropriately sets label to read out y1 values
+
+    //           return "translate(" + mouseXY[0] + "," + pos.y + ")";
+    //         });
+    //     })
+    //   )
+  };
+
+//-------------------y1-ABOVE-------------------y2-BELOW----------------------//-------------------------------------------------------------------------------------------
+
+if (data.every(d => d.coverage !== undefined)) {
   const y2LineGenerator = line()
     .x(d => xScale(xValue(d))) // set x accessor
     .y(d => y2Scale(y2Value(d))) // set y accessor
@@ -189,130 +308,129 @@ const render = data => {
       .ease(easeCubic)
       .attr("stroke-dashoffset", 0);
 
-  let unwantedY2Paths = document.getElementsByClassName('coverage-path');
-  for (let i = 0; i < unwantedY2Paths.length; i++) {
-    const ele = unwantedY2Paths[i];
-    if (ele.getAttribute('d') === null) ele.remove()
+  let y2Paths = document.getElementsByClassName('coverage-path');
+  for (let i = 0; i < y2Paths.length; i++) {
+    if (y2Paths[i].getAttribute('d') === null) ele.remove()
   }
 
 //--------------------------mouseover line effect-----------------------------//
-  const mouseG = g.append('g')
-    .attr('class', 'mouse-over-effects');
-  mouseG.append('path')
-    .attr("class", "mouse-line")
-    .style("stroke", "black")
-    .style("stroke-width", "1px")
-    .style("opacity", "0");
+  // const mouseG = g.append('g')
+  //   // .attr('class', 'mouse-over-effects');
 
-  let lines = document.getElementsByClassName('path');
+  // console.log('mouseG 2', mouseG)
 
-  const mousePerLine = mouseG.selectAll('.mouse-per-line')
-    .data(data)
-    .enter()
-    .append("g")
-    .attr("class", "mouse-per-line");
+  // mouseG.append('path')
+  //   .attr("class", "mouse-line")
+  //   .style("stroke", "black")
+  //   .style("stroke-width", "1px")
+  //   .style("opacity", "0");
+
+  // let lines = document.getElementsByClassName('coverage-path');
+
+  // const mousePerLine = mouseG.selectAll('.mouse-per-line')
+  //   .data(data)
+  //   .enter()
+  //   .append("g")
+  //   .attr("class", "mouse-per-line");
   
-  mousePerLine.append('circle')
-    .style("opacity", "0")
-    .attr('class', 'moving-circle')
-    .attr("r", 7)
-    .style("stroke", 'black') //d => {return color(d.name)})
-    .style("fill", "none")
-    .style("stroke-width", "1px")
+  // mousePerLine.append('circle')
+  //   .style("opacity", "0")
+  //   .attr('class', 'moving-circle')
+  //   .attr("r", 7)
+  //   .style("stroke", 'black') //d => {return color(d.name)})
+  //   .style("fill", "none")
+  //   .style("stroke-width", "1px")
 
-  mousePerLine.append("text")
-    .style('opacity', '0')
-    .attr('class', 'moving-label')
-    .attr("transform", "translate(10,20)");
+  // mousePerLine.append("text")
+  //   .style('opacity', '0')
+  //   .attr('class', 'label moving-label')
+  //   .attr("transform", "translate(10,20)");
 
-  deleteNodes()
-  .then(() => mouseG.append('rect') // append a rect to catch mouse movements on canvas
-    .style("opacity", "0")
-    .attr('width', innerWidth) // can't catch mouse events on a g element
-    .attr('height', innerHeight)
-    .attr('id', 'mouse-rect')
-    .attr('fill', 'none')
-    .attr('pointer-events', 'all')
-    .on('mouseout', () => { // on mouseout, hide line, circles and text
-      select(".mouse-line")
-        .transition()
-          .duration(1000)
-          .style("opacity", "0");
-      selectAll(".mouse-per-line circle")
-        .transition()
-          .duration(1000)
-          .style("opacity", "0");
-      selectAll(".mouse-per-line text")
-        .transition()
-          .duration(1000)
-          .style("opacity", "0");
-    })
-    .on('mouseover', () => { // on mouseover, show line, circles and text
-      deleteNodes();
+  // deleteNodes("moving-label", 'moving-circle', "mouse-per-line")
+  // .then(() => mouseG.append('rect') // append a rect to catch mouse movements on canvas
+  //   .style("opacity", "0")
+  //   .attr('width', innerWidth) // can't catch mouse events on a g element
+  //   .attr('height', innerHeight)
+  //   .attr('id', 'mouse-rect')
+  //   .attr('fill', 'none')
+  //   .attr('pointer-events', 'all')
+  //   .on('mouseout', () => { // on mouseout, hide line, circles and text
+  //     select(".mouse-line")
+  //       .transition()
+  //         .duration(1000)
+  //         .style("opacity", "0");
+  //     selectAll(".mouse-per-line .moving-circle")
+  //       .transition()
+  //         .duration(1000)
+  //         .style("opacity", "0");
+  //     selectAll(".mouse-per-line text")
+  //       .transition()
+  //         .duration(1000)
+  //         .style("opacity", "0");
+  //   })
+  //   .on('mouseover', () => { // on mouseover, show line, circles and text
+  //     deleteNodes("moving-label", 'moving-circle', "mouse-per-line");
 
-      select(".mouse-line")
-        .style("opacity", "0")
-        .transition()
-          .duration(500)
-          .style('opacity', '1');
-      selectAll(".mouse-per-line circle")
-        .style("opacity", "0")
-        .transition()
-        .duration(500)
-        .style('opacity', '1');
-      selectAll(".mouse-per-line text")
-        .style("opacity", "0")
-        .transition()
-        .duration(500)
-        .style('opacity', '1');
-    })
-    .on('mousemove', () => { // mouse moving over graph
-      deleteNodes();
+  //     select(".mouse-line")
+  //       .style("opacity", "0")
+  //       .transition()
+  //         .duration(500)
+  //         .style('opacity', '1');
+  //     selectAll(".mouse-per-line .moving-circle")
+  //       .style("opacity", "0")
+  //       .transition()
+  //       .duration(500)
+  //       .style('opacity', '1');
+  //     selectAll(".mouse-per-line text")
+  //       .style("opacity", "0")
+  //       .transition()
+  //       .duration(500)
+  //       .style('opacity', '1');
+  //   })
+  //   .on('mousemove', () => { // mouse moving over graph
+  //     deleteNodes("moving-label", 'moving-circle', "mouse-per-line");
 
-      let container = document.getElementById('mouse-rect')
-      let mouseXY = mouse(container);
+  //     let container = document.getElementById('mouse-rect')
+  //     let mouseXY = mouse(container);
 
-      select(".mouse-line")
-        .attr("d", () => {
-          let d = "M" + mouseXY[0] + "," + innerHeight;
-          d += " " + mouseXY[0] + "," + 0;
-          return d;
-        });
+  //     select(".mouse-line")
+  //       .attr("d", () => {
+  //         let d = "M" + mouseXY[0] + "," + innerHeight;
+  //         d += " " + mouseXY[0] + "," + 0;
+  //         return d;
+  //       });
 
-      selectAll(".mouse-per-line")
-        .attr("transform", function (d, i) {
-          // let xYear = xScale.invert(mouseXY[0]);
-          // console.log('xYear', xYear)
-          // let bisect = bisector(d => { return d.year; }).right;
-          // console.log('bisect', bisect)
-          // let idx = bisect(Object.values(d), xYear);
-          // console.log('idx', idx)
-          console.log('d', d)
+  //     selectAll(".mouse-per-line")
+  //       .attr("transform", function (d, i) {
 
-          let beginning = 0;
-          let end = (lines[i] ? lines[i].getTotalLength() : 0);
-          let target = null;
-          let pos;
+  //         // console.log('d', d)
 
-          while (true) {
-            target = Math.floor((beginning + end) / 2);
-            pos = (lines[i] ? lines[i].getPointAtLength(target) : {x:0, y:0});
-            if ((target === end || target === beginning) && pos.x !== mouseXY[0]) {
-              break;
-            }
-            if (pos.x > mouseXY[0]) end = target;
-            else if (pos.x < mouseXY[0]) beginning = target;
-            else break; //position found
-          }
+  //         let beginning = 0;
+  //         let end = (lines[i] ? lines[i].getTotalLength() : 0);
+  //         let target = null;
+  //         let pos;
 
-          select(this).select('text')
-            .text(y2Scale.invert(pos.y).toFixed(2));
-          console.log(y2Scale)
+  //         while (true) {
+  //           target = Math.floor((beginning + end) / 2);
+  //           pos = (lines[i] ? lines[i].getPointAtLength(target) : {x:0, y:0});
+  //           if ((target === end || target === beginning) && pos.x !== mouseXY[0]) {
+  //             break;
+  //           }
+  //           if (pos.x > mouseXY[0]) end = target;
+  //           else if (pos.x < mouseXY[0]) beginning = target;
+  //           else break; //position found
+  //         }
 
-          return "translate(" + mouseXY[0] + "," + pos.y + ")";
-        });
-      })
-  )
+  //         console.log(this);
+  //         select(this).select('.moving-label')
+  //           .text(y2Scale.invert(pos.y).toFixed(2));
+
+  //         return "translate(" + mouseXY[0] + "," + pos.y + ")";
+  //       });
+  //     })
+  // )
+};
+
   // draw title
   g.append('text')
     .attr('class', 'title')
@@ -320,7 +438,7 @@ const render = data => {
     .attr('x', innerWidth / 2)
     .attr('text-anchor', 'middle')
     .text(titleText);
-};
+}
 
 const loadData = countryIdx => {
   csv('../data/polio_incidence.csv')

@@ -61,7 +61,7 @@ path {
   stroke: rgb(153, 153, 153)
 }
 
-.moving-label {
+.label {
   z-index: 5;
   font-size: 1em;
   color: black;
