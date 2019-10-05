@@ -4,17 +4,17 @@ export const deleteNodes = (label, circle, line) => {
     let movingCircles = document.getElementsByClassName(`${circle}`);
     let perLineG = document.getElementsByClassName(`${line}`);
 
-    for (let i = 1; i < movingLabels.length; i++) {
+    for (let i = 2; i < movingLabels.length; i++) {
       const node = movingLabels[i];
       node.remove();
     }
 
-    for (let i = 1; i < movingCircles.length; i++) {
+    for (let i = 2; i < movingCircles.length; i++) {
       const node = movingCircles[i];
       node.remove();
     }
 
-    for (let i = 1; i < perLineG.length; i++) {
+    for (let i = 2; i < perLineG.length; i++) {
       const node = perLineG[i];
       node.remove();
     }

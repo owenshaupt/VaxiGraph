@@ -13,6 +13,7 @@ const receiveUserSelection = () => {
 let countryName;
 let incidenceArr = [];
 let coverageArr = [];
+let dataArr = [];
 let countryIdx;
 let titleText = 'Select a Country Below...';
 
@@ -22,15 +23,11 @@ const handleChange = e => {
   countryIdx = COUNTRY_CODES_ARR.indexOf(countryCode)
   incidenceArr = [];
   coverageArr = [];
+  
   d3.selectAll("svg > *").remove();
   loadData(countryIdx);
-  // debugger
+
   titleText = `${ countryName } Polio Incidence`;
-  // Promise.all(
-    // render(incidenceArr))
-      // .then(() => {
-        // render(coverageArr);
-  // })
 }
 
 const svg = select('svg');
@@ -200,21 +197,12 @@ if (data.every(d => d.coverage !== undefined)) {
 
   let y2Paths = document.getElementsByClassName('coverage-path');
   for (let i = 0; i < y2Paths.length; i++) {
-    if (y2Paths[i].getAttribute('d') === null) ele.remove()
+    const ele = y2Paths[i];
+    if (ele.getAttribute('d') === null) ele.remove()
   }
 
 //--------------------------mouseover line effect-----------------------------//
   
-};
-
-  // draw title
-  g.append('text')
-    .attr('class', 'title')
-    .attr('y', -10)
-    .attr('x', innerWidth / 2)
-    .attr('text-anchor', 'middle')
-    .text(titleText);
-
   const mouseG = g.append('g')
 
   mouseG.append('path') // sets up the lint itself
@@ -222,6 +210,27 @@ if (data.every(d => d.coverage !== undefined)) {
     .style("stroke", "black")
     .style("stroke-width", "1px")
     .style("opacity", "0");
+
+  let lines = document.getElementsByClassName('path');
+
+  const mousePerLine = mouseG.selectAll('.mouse-per-line')
+    .data(data)
+    .enter()
+    .append("g")
+    .attr("class", "mouse-per-line");
+
+  mousePerLine.append('circle')
+    .style("opacity", "0")
+    .attr('class', 'moving-circle')
+    .attr("r", 7)
+    .style("stroke", 'black') //d => {return color(d.name)})
+    .style("fill", "none")
+    .style("stroke-width", "1px")
+
+  mousePerLine.append("text")
+    .style('opacity', '0')
+    .attr('class', 'label moving-label')
+    .attr("transform", "translate(10,20)");
 
   mouseG.append('rect') // append a rect to catch mouse movements on canvas
     .style("opacity", "0")
@@ -235,16 +244,33 @@ if (data.every(d => d.coverage !== undefined)) {
         .transition()
         .duration(1000)
         .style("opacity", "0");
+      selectAll(".moving-circle")
+        .transition()
+        .duration(1000)
+        .style("opacity", "0");
+      selectAll(".moving-label")
+        .transition()
+        .duration(1000)
+        .style("opacity", "0");
     })
     .on('mouseover', () => { // on mouseover, show line
-      deleteNodes("moving-label", 'moving-circle', "mouse-line");
+      deleteNodes("moving-label", 'moving-circle', "mouse-per-line");
 
       select(".mouse-line")
         .style("opacity", "0")
         .transition()
         .duration(500)
         .style('opacity', '1');
-
+      selectAll(".moving-circle")
+        .style("opacity", "0")
+        .transition()
+          .duration(500)
+          .style('opacity', '1');
+      selectAll(".mouse-per-line text")
+        .style("opacity", "0")
+        .transition()
+        .duration(500)
+        .style('opacity', '1');
     })
     .on('mousemove', () => { // mouse moving over graph
       deleteNodes("moving-label", 'moving-circle', "mouse-per-line");
@@ -275,17 +301,37 @@ if (data.every(d => d.coverage !== undefined)) {
             if (pos.x > mouseXY[0]) end = target;
             else if (pos.x < mouseXY[0]) beginning = target;
             else break; // position found
+
+            if (lines[i].getAttribute('class') === 'path graph-path coverage-path') {
+              select(this).select('.moving-label')
+                .text(y2Scale.invert(pos.y).toFixed(2));
+            }
+            
+            if (lines[i].getAttribute('class') === 'path graph-path incidence-path') {
+              select(this).select('.moving-label')
+                .text(y1Scale.invert(pos.y).toFixed(0));
+            }
           }
 
-          select(this).select('.moving-label')
-            .text(y2Scale.invert(pos.y).toFixed(2));
-
           return "translate(" + mouseXY[0] + "," + pos.y + ")";
-        });
+        })
+        
     })
+
+};
+
+  // draw title
+  g.append('text')
+    .attr('class', 'title')
+    .attr('y', -10)
+    .attr('x', innerWidth / 2)
+    .attr('text-anchor', 'middle')
+    .text(titleText);
 }
 
 const loadData = countryIdx => {
+  dataArr = [];
+
   csv('../data/polio_incidence.csv')
     .then(data => {
       receiveUserSelection()
@@ -301,30 +347,17 @@ const loadData = countryIdx => {
         const obj = {};
         obj.year = y;
         obj.incidence = +data[countryIdx][y];
-        incidenceArr.push(obj)
+        dataArr.push(obj);
       });
-
-      render(incidenceArr);
     });
 
   csv('../data/polio_coverage_estimates.csv')
     .then(data => {
-      const columns = Object.keys(data[countryIdx]);
-      const countries = data.map(d => d.Cname);
-      const years = columns.map(colHeader => {
-        if (+colHeader) return +colHeader
-      }).filter(
-        header => typeof header === "number"
-      )
+      dataArr.forEach(obj => {
+        obj.coverage = +data[countryIdx][obj.year];
+      });
 
-      years.forEach(y => {
-        const obj = {};
-        obj.year = y;
-        obj.coverage = +data[countryIdx][y];
-        coverageArr.push(obj)
-      })
-
-      render(coverageArr);
+      render(dataArr);
     })
 }
 

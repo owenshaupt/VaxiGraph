@@ -35,10 +35,12 @@ text.title {
 }
 
 .tick {
+  pointer-events: none;
   font-size: .65em;
 }
 
 path {
+  pointer-events: none;
   /* path elements preset for border stroke */
   stroke: rgb(153, 153, 153);
 }
@@ -65,4 +67,8 @@ path {
   z-index: 5;
   font-size: 1em;
   color: black;
+}
+
+rect {
+  z-index: 10;
 }
