@@ -304,7 +304,7 @@ if (data.every(d => d.coverage !== undefined)) {
 
             if (lines[i].getAttribute('class') === 'path graph-path coverage-path') {
               select(this).select('.moving-label')
-                .text(y2Scale.invert(pos.y).toFixed(2));
+                .text(`${y2Scale.invert(pos.y).toFixed(2)}%`);
             }
             
             if (lines[i].getAttribute('class') === 'path graph-path incidence-path') {
