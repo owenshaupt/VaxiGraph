@@ -2,6 +2,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  align-items: center
 }
 
 .master {
@@ -25,18 +26,17 @@ body {
 
 text {
   font-size: 2.2em;
-  font-family: 'helvetica';
-  font-weight: thin
 }
 
 text.title {
-  font-family: 'helvetica';
-  font-weight: thin
+  font-family: 'gliko_modern_mbold';
+  font-size: 3em;
 }
 
 .tick {
   pointer-events: none;
   font-size: .65em;
+  font-family: 'beatrice_regular';
 }
 
 path {
@@ -52,15 +52,15 @@ path {
 }
 
 .incidence-path {
-  stroke: steelblue;
+  stroke: #0A2979;
 }
 
 .coverage-path {
-  stroke: plum;
+  stroke: #F34616;
 }
 
 .tick line {
-  stroke: rgb(153, 153, 153)
+  stroke: rgb(221, 221, 221)
 }
 
 .label {
@@ -69,6 +69,17 @@ path {
   color: black;
 }
 
+.axis-label {
+  font-family: 'beatrice_semibold';
+}
+
+.moving-label {
+  font-family: 'beatrice_thin';
+}
+
 rect {
   z-index: 10;
 }
+
+/* deep blue #0A2979 */
+/* bold orange #F34616 */

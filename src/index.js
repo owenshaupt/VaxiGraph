@@ -5,10 +5,11 @@ import { select,selectAll,csv,scaleLinear,scaleTime,extent,min,max,axisLeft,
 import { COUNTRY_CODES_OBJ, COUNTRY_CODES_ARR } from './country_codes';
 import { deleteNodes } from './delete_nodes';
 
-const receiveUserSelection = () => {
-  document.getElementById('user-country-select')
-    .addEventListener('change', handleChange);
-}
+
+// const receiveUserSelection = () => {
+//   document.getElementById('user-country-select')
+//     .addEventListener('change', handleChange);
+// }
 
 let countryName;
 let incidenceArr = [];
@@ -19,6 +20,7 @@ let titleText = 'Select a Country Below...';
 
 const handleChange = e => {
   const countryCode = e.target.value;
+  e.target.blur();
   countryName = COUNTRY_CODES_OBJ[countryCode];
   countryIdx = COUNTRY_CODES_ARR.indexOf(countryCode)
   incidenceArr = [];
@@ -30,7 +32,12 @@ const handleChange = e => {
   titleText = `${ countryName } Polio Incidence`;
 }
 
+document
+  .getElementById("user-country-select")
+  .addEventListener("change", handleChange);
+
 const svg = select('svg');
+
 
 const width = +svg.attr('width');
 const height = +svg.attr('height');
@@ -67,6 +74,14 @@ const render = data => {
     .range([innerHeight, 0])
     .nice()
 
+  svg.append('image')
+    .attr('transform', `translate(${margin.left},${margin.top})`)
+    // .attr("x", 0)
+    // .attr("y", 0)
+    .attr("width", innerWidth)
+    .attr("height", innerHeight)
+    .attr("xlink:href", "../images/background.png");
+
   // create g element with origin at the graph body (inside the margins)
   const g = svg.append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -93,7 +108,7 @@ const render = data => {
   // sets attributes on a new text element
   y1AxisG.append('text')
     .attr('class', 'axis-label incidence-text')
-    .attr('y', -100)
+    .attr('y', -90)
     .attr('x', -innerHeight / 2)
     .attr('fill', 'black')
     .attr('transform', `rotate(270)`)
@@ -202,7 +217,7 @@ if (data.every(d => d.coverage !== undefined)) {
   }
 
 //--------------------------mouseover line effect-----------------------------//
-  
+
   const mouseG = g.append('g')
 
   mouseG.append('path') // sets up the lint itself
@@ -323,7 +338,7 @@ if (data.every(d => d.coverage !== undefined)) {
   // draw title
   g.append('text')
     .attr('class', 'title')
-    .attr('y', -10)
+    .attr('y', -20)
     .attr('x', innerWidth / 2)
     .attr('text-anchor', 'middle')
     .text(titleText);
@@ -334,7 +349,7 @@ const loadData = countryIdx => {
 
   csv('../data/polio_incidence.csv')
     .then(data => {
-      receiveUserSelection()
+      // receiveUserSelection()
       const columns = Object.keys(data[countryIdx]);
       const countries = data.map(d => d.Cname);
       const years = columns.map(colHeader => {
@@ -353,6 +368,7 @@ const loadData = countryIdx => {
 
   csv('../data/polio_coverage_estimates.csv')
     .then(data => {
+      // receiveUserSelection();
       dataArr.forEach(obj => {
         obj.coverage = +data[countryIdx][obj.year];
       });
@@ -363,9 +379,8 @@ const loadData = countryIdx => {
 
 csv('../data/polio_incidence.csv')
   .then(data => {
-    receiveUserSelection()
+    // receiveUserSelection()
     const columns = Object.keys(data[0]);
-    const countries = data.map(d => d.Cname);
     const years = columns.map(colHeader => {
       if (+colHeader) return +colHeader
     }).filter(
@@ -384,8 +399,8 @@ csv('../data/polio_incidence.csv')
 
 csv('../data/polio_coverage_estimates.csv')
   .then(data => {
+    // receiveUserSelection();
     const columns = Object.keys(data[0]);
-    const countries = data.map(d => d.Cname);
     const years = columns.map(colHeader => {
       if (+colHeader) return +colHeader
     }).filter(
