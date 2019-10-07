@@ -399,7 +399,7 @@ async function loadData(countryIdx) {
 
 function loadIncidence(countryIdx) {
   return new Promise(resolve => {
-    csv("../data/polio_incidence.csv").then(data => {
+    csv("./data/polio_incidence.csv").then(data => {
       const dataArr = [];
 
       const columns = Object.keys(data[countryIdx]);
@@ -423,7 +423,7 @@ function loadIncidence(countryIdx) {
 
 function loadCoverage(countryIdx, dataArr) {
   return new Promise(resolve => {
-    csv("../data/polio_coverage_estimates.csv").then(data => {
+    csv("./data/polio_coverage_estimates.csv").then(data => {
       dataArr.forEach(obj => {
         obj.coverage = +data[countryIdx][obj.year];
       });
@@ -435,7 +435,7 @@ function loadCoverage(countryIdx, dataArr) {
 
 // Loads the first time only
 
-csv("../data/polio_incidence.csv").then(data => {
+csv("./data/polio_incidence.csv").then(data => {
   const columns = Object.keys(data[0]);
   const years = columns
     .map(colHeader => {
@@ -453,7 +453,7 @@ csv("../data/polio_incidence.csv").then(data => {
   render([]);
 });
 
-csv("../data/polio_coverage_estimates.csv").then(data => {
+csv("./data/polio_coverage_estimates.csv").then(data => {
   // receiveUserSelection();
   const columns = Object.keys(data[0]);
   const years = columns
