@@ -27,9 +27,10 @@ const handleChange = e => {
   coverageArr = [];
   
   d3.selectAll("svg > *").remove();
+
   loadData(countryIdx);
 
-  titleText = `${ countryName } Polio Incidence`;
+  titleText = `${countryName} Polio Incidence`;
 }
 
 document
