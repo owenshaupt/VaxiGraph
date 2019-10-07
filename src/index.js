@@ -105,7 +105,7 @@ async function render(countryIdx) {
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .attr("width", innerWidth)
     .attr("height", innerHeight)
-    .attr("xlink:href", "images/background.png");
+    .attr("xlink:href", "./background.png");
 
   // create g element with origin at the graph body (inside the margins)
   const g = svg
