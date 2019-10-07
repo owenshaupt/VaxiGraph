@@ -43,7 +43,7 @@ const handleChange = e => {
   incidenceArr = [];
   coverageArr = [];
 
-  d3.selectAll("svg > *").remove();
+  selectAll("svg > *").remove();
 
   render(countryIdx);
 
