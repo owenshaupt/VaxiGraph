@@ -24,11 +24,6 @@ import {
 import { COUNTRY_CODES_OBJ, COUNTRY_CODES_ARR } from "./country_codes";
 import { deleteNodes } from "./delete_nodes";
 
-// const receiveUserSelection = () => {
-//   document.getElementById('user-country-select')
-//     .addEventListener('change', handleChange);
-// }
-
 let countryName;
 let incidenceArr = [];
 let coverageArr = [];
@@ -63,11 +58,8 @@ async function render(countryIdx) {
   let data;
 
   if (typeof countryIdx === "number" && countryIdx >= 0) {
-    console.log("countryIdx", countryIdx);
     data = await loadData(countryIdx);
   }
-
-  // console.log('data', data)
 
   // xValue is a function which extracts "year" from data
   const xValue = d => d.year;
@@ -253,7 +245,7 @@ async function render(countryIdx) {
     const mouseG = g.append("g");
 
     mouseG
-      .append("path") // sets up the lint itself
+      .append("path")
       .attr("class", "mouse-line")
       .style("stroke", "black")
       .style("stroke-width", "1px")
@@ -273,7 +265,7 @@ async function render(countryIdx) {
       .style("opacity", "0")
       .attr("class", "moving-circle")
       .attr("r", 7)
-      .style("stroke", "black") //d => {return color(d.name)})
+      .style("stroke", "black")
       .style("fill", "none")
       .style("stroke-width", "1px");
 
@@ -284,7 +276,7 @@ async function render(countryIdx) {
       .attr("transform", "translate(10,20)");
 
     mouseG
-      .append("rect") // append a rect to catch mouse movements on canvas
+      .append("rect")
       .style("opacity", "0")
       .attr("width", innerWidth)
       .attr("height", innerHeight)
@@ -292,7 +284,6 @@ async function render(countryIdx) {
       .attr("fill", "none")
       .attr("pointer-events", "all")
       .on("mouseout", () => {
-        // on mouseout, hide line
         select(".mouse-line")
           .transition()
           .duration(1000)
@@ -307,7 +298,6 @@ async function render(countryIdx) {
           .style("opacity", "0");
       })
       .on("mouseover", () => {
-        // on mouseover, show line
         deleteNodes("moving-label", "moving-circle", "mouse-per-line");
 
         select(".mouse-line")
@@ -327,7 +317,6 @@ async function render(countryIdx) {
           .style("opacity", "1");
       })
       .on("mousemove", () => {
-        // mouse moving over graph
         deleteNodes("moving-label", "moving-circle", "mouse-per-line");
 
         let container = document.getElementById("mouse-rect");
@@ -393,7 +382,6 @@ async function render(countryIdx) {
 async function loadData(countryIdx) {
   const indicenceDataArr = await loadIncidence(countryIdx);
   const coverageDataArr = await loadCoverage(countryIdx, indicenceDataArr);
-  console.log("coverageDataArr", coverageDataArr);
   return coverageDataArr;
 }
 
@@ -435,39 +423,39 @@ function loadCoverage(countryIdx, dataArr) {
 
 // Loads the first time only
 
-// csv("./data/polio_incidence.csv").then(data => {
-//   const columns = Object.keys(data[0]);
-//   const years = columns
-//     .map(colHeader => {
-//       if (+colHeader) return +colHeader;
-//     })
-//     .filter(header => typeof header === "number");
+csv("./data/polio_incidence.csv").then(data => {
+  const columns = Object.keys(data[0]);
+  const years = columns
+    .map(colHeader => {
+      if (+colHeader) return +colHeader;
+    })
+    .filter(header => typeof header === "number");
 
-//   years.forEach(y => {
-//     const obj = {};
-//     obj.year = y;
-//     obj.incidence = +data[0][y];
-//     incidenceArr.push(obj);
-//   });
+  years.forEach(y => {
+    const obj = {};
+    obj.year = y;
+    obj.incidence = +data[0][y];
+    incidenceArr.push(obj);
+  });
 
-//   render([]);
-// });
+  render([]);
+});
 
-// csv("./data/polio_coverage_estimates.csv").then(data => {
-//   // receiveUserSelection();
-//   const columns = Object.keys(data[0]);
-//   const years = columns
-//     .map(colHeader => {
-//       if (+colHeader) return +colHeader;
-//     })
-//     .filter(header => typeof header === "number");
+csv("./data/polio_coverage_estimates.csv").then(data => {
+  // receiveUserSelection();
+  const columns = Object.keys(data[0]);
+  const years = columns
+    .map(colHeader => {
+      if (+colHeader) return +colHeader;
+    })
+    .filter(header => typeof header === "number");
 
-//   years.forEach(y => {
-//     const obj = {};
-//     obj.year = y;
-//     obj.coverage = +data[0][y];
-//     coverageArr.push(obj);
-//   });
+  years.forEach(y => {
+    const obj = {};
+    obj.year = y;
+    obj.coverage = +data[0][y];
+    coverageArr.push(obj);
+  });
 
-//   render([]);
-// });
+  render([]);
+});
