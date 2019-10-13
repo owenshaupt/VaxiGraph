@@ -45,7 +45,7 @@ const handleChange = e => {
 
   selectAll("svg > *").remove();
 
-  render(countryIdx);
+  render(countryIdx); // line 31 in console (console + 17 = code)
 
   titleText = `${countryName} Polio Incidence`;
 };
@@ -62,12 +62,12 @@ const height = +svg.attr("height");
 async function render(countryIdx) {
   let data;
 
-  if (typeof countryIdx === "number" && countryIdx > 0) {
-    console.log("countryIdx", countryIdx);
-    data = await loadData(countryIdx);
-  }
-
-  // console.log(data)
+  debugger;
+  // if (typeof countryIdx === "number" && countryIdx >= 0) {
+  console.log("countryIdx", countryIdx);
+  // data = await loadData(countryIdx);
+  // }
+  console.log("data", data);
 
   // xValue is a function which extracts "year" from data
   const xValue = d => d.year;
@@ -393,7 +393,7 @@ async function render(countryIdx) {
 async function loadData(countryIdx) {
   const indicenceDataArr = await loadIncidence(countryIdx);
   const coverageDataArr = await loadCoverage(countryIdx, indicenceDataArr);
-
+  console.log("coverageDataArr", coverageDataArr);
   return coverageDataArr;
 }
 
