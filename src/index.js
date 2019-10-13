@@ -62,12 +62,12 @@ const height = +svg.attr("height");
 async function render(countryIdx) {
   let data;
 
-  debugger;
-  // if (typeof countryIdx === "number" && countryIdx >= 0) {
-  console.log("countryIdx", countryIdx);
-  // data = await loadData(countryIdx);
-  // }
-  console.log("data", data);
+  if (typeof countryIdx === "number" && countryIdx >= 0) {
+    console.log("countryIdx", countryIdx);
+    data = await loadData(countryIdx);
+  }
+
+  // console.log('data', data)
 
   // xValue is a function which extracts "year" from data
   const xValue = d => d.year;
@@ -435,39 +435,39 @@ function loadCoverage(countryIdx, dataArr) {
 
 // Loads the first time only
 
-csv("./data/polio_incidence.csv").then(data => {
-  const columns = Object.keys(data[0]);
-  const years = columns
-    .map(colHeader => {
-      if (+colHeader) return +colHeader;
-    })
-    .filter(header => typeof header === "number");
+// csv("./data/polio_incidence.csv").then(data => {
+//   const columns = Object.keys(data[0]);
+//   const years = columns
+//     .map(colHeader => {
+//       if (+colHeader) return +colHeader;
+//     })
+//     .filter(header => typeof header === "number");
 
-  years.forEach(y => {
-    const obj = {};
-    obj.year = y;
-    obj.incidence = +data[0][y];
-    incidenceArr.push(obj);
-  });
+//   years.forEach(y => {
+//     const obj = {};
+//     obj.year = y;
+//     obj.incidence = +data[0][y];
+//     incidenceArr.push(obj);
+//   });
 
-  render([]);
-});
+//   render([]);
+// });
 
-csv("./data/polio_coverage_estimates.csv").then(data => {
-  // receiveUserSelection();
-  const columns = Object.keys(data[0]);
-  const years = columns
-    .map(colHeader => {
-      if (+colHeader) return +colHeader;
-    })
-    .filter(header => typeof header === "number");
+// csv("./data/polio_coverage_estimates.csv").then(data => {
+//   // receiveUserSelection();
+//   const columns = Object.keys(data[0]);
+//   const years = columns
+//     .map(colHeader => {
+//       if (+colHeader) return +colHeader;
+//     })
+//     .filter(header => typeof header === "number");
 
-  years.forEach(y => {
-    const obj = {};
-    obj.year = y;
-    obj.coverage = +data[0][y];
-    coverageArr.push(obj);
-  });
+//   years.forEach(y => {
+//     const obj = {};
+//     obj.year = y;
+//     obj.coverage = +data[0][y];
+//     coverageArr.push(obj);
+//   });
 
-  render([]);
-});
+//   render([]);
+// });
