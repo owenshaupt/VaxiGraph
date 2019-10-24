@@ -1,0 +1,32 @@
+.legend-labels {
+  display: flex;
+  /* display: none; */
+}
+
+.legend-label-holder {
+  margin-left: 45px;
+  display: flex;
+}
+
+.legend-label {
+  position: relative;
+  top: -21px;
+  font-size: 12px;
+  font-family: "beatrice_regular";
+}
+
+.legend-bar {
+  position: relative;
+  height: 4px;
+  width: 70px;
+  top: -17.5px;
+  margin-left: 10px;
+}
+
+.bar-orange {
+  background-color: #f34616;
+}
+
+.bar-blue {
+  background-color: #0a2979;
+}

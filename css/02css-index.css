@@ -14,6 +14,12 @@ body {
   /* margin-top: 25%; */
 }
 
+.bottom-row {
+  width: fit-content;
+  margin: 0px auto;
+  display: flex;
+}
+
 .user-country-selector {
   width: fit-content;
   margin: 0px auto;
@@ -32,14 +38,14 @@ text {
 }
 
 text.title {
-  font-family: 'gliko_modern_mbold';
+  font-family: "gliko_modern_mbold";
   font-size: 2em;
 }
 
 .tick {
   pointer-events: none;
-  font-size: .7em;
-  font-family: 'beatrice_regular';
+  font-size: 0.7em;
+  font-family: "beatrice_regular";
 }
 
 path {
@@ -51,42 +57,47 @@ path {
 .path {
   fill: none;
   stroke-width: 3;
-  stroke-linejoin: round
+  stroke-linejoin: round;
 }
 
 .incidence-path {
-  stroke: #0A2979;
+  stroke: #0a2979;
 }
 
 .coverage-path {
-  stroke: #F34616;
+  stroke: #f34616;
 }
 
 .tick line {
-  stroke: rgb(221, 221, 221)
+  stroke: rgb(221, 221, 221);
 }
 
 .label {
   z-index: 5;
-  font-size: .8em;
+  font-size: 0.8em;
   color: black;
 }
 
 .axis-label {
-  font-family: 'beatrice_semibold';
+  font-family: "beatrice_semibold";
 }
 
 .moving-label {
-  font-family: 'beatrice_thin';
+  font-family: "beatrice_thin";
 }
 
 rect {
   z-index: 10;
 }
 
-.background-div {
-  border: solid red 2px;
+/* 
+.bottom-row {
+  display: flex;
 }
+
+.bottom-row > * {
+  top: -30px;
+} */
 
 /* deep blue #0A2979 */
 /* bold orange #F34616 */

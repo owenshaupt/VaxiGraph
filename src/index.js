@@ -136,16 +136,6 @@ async function render(countryIdx) {
     .attr("text-anchor", "middle")
     .text(y1AxisLabel);
 
-  // y1AxisG
-  //   .append("image")
-  //   .attr("xlink:href", "../images/line_icon_blue.svg")
-  //   .attr("class", "legend blue-legend")
-  //   .attr("y", -112)
-  //   .attr("x", -194)
-  //   .attr("transform", `rotate(270)`)
-  //   .attr("width", "27px")
-  //   .attr("height", "27px");
-
   const y2AxisG = g.append("g").call(y2Axis);
   // y2AxisG.selectAll('.domain').remove();
 
@@ -158,16 +148,6 @@ async function render(countryIdx) {
     .attr("transform", `rotate(90)`)
     .attr("text-anchor", "middle")
     .text(y2AxisLabel);
-
-  // y2AxisG
-  //   .append("image")
-  //   .attr("xlink:href", "../images/line_icon_orange.svg")
-  //   .attr("class", "legend orange-legend")
-  //   .attr("y", -1190)
-  //   .attr("x", 447)
-  //   .attr("transform", `rotate(90)`)
-  //   .attr("width", "27px")
-  //   .attr("height", "27px");
 
   const xAxisG = g
     .append("g")
