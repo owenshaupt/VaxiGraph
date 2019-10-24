@@ -179,7 +179,7 @@ async function render(countryIdx) {
   xAxisG
     .append("text")
     .attr("class", "axis-label")
-    .attr("y", 52)
+    .attr("y", 54)
     .attr("x", innerWidth / 2)
     .attr("fill", "black")
     .text(xAxisLabel);

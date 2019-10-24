@@ -2,13 +2,16 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .master {
   display: flex;
   flex-direction: column;
   margin: 0px auto;
+  /* margin-top: 25%; */
 }
 
 .user-country-selector {
