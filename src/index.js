@@ -140,7 +140,7 @@ async function render(countryIdx) {
   y2AxisG
     .append("text")
     .attr("class", "axis-label coverage-text")
-    .attr("y", -innerWidth - 80)
+    .attr("y", -innerWidth - 70)
     .attr("x", innerHeight / 2)
     .attr("fill", "black")
     .attr("transform", `rotate(90)`)
