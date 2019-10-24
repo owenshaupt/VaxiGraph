@@ -25,17 +25,17 @@ body {
 }
 
 text {
-  font-size: 2.2em;
+  font-size: 1.85em;
 }
 
 text.title {
   font-family: 'gliko_modern_mbold';
-  font-size: 3em;
+  font-size: 2em;
 }
 
 .tick {
   pointer-events: none;
-  font-size: .65em;
+  font-size: .7em;
   font-family: 'beatrice_regular';
 }
 
@@ -65,7 +65,7 @@ path {
 
 .label {
   z-index: 5;
-  font-size: 1em;
+  font-size: .8em;
   color: black;
 }
 
@@ -79,6 +79,10 @@ path {
 
 rect {
   z-index: 10;
+}
+
+.background-div {
+  border: solid red 2px;
 }
 
 /* deep blue #0A2979 */

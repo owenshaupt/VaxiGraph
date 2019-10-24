@@ -73,7 +73,7 @@ async function render(countryIdx) {
   const y2Value = d => d.coverage;
   const y2AxisLabel = "Polio Vaccine Coverage";
 
-  const margin = { top: 100, right: 200, bottom: 100, left: 200 };
+  const margin = { top: 60, right: 200, bottom: 100, left: 200 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -93,6 +93,8 @@ async function render(countryIdx) {
     .nice();
 
   svg
+    // .append("div")
+    // .attr("class", "background-div")
     .append("image")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .attr("width", innerWidth)
@@ -134,6 +136,16 @@ async function render(countryIdx) {
     .attr("text-anchor", "middle")
     .text(y1AxisLabel);
 
+  // y1AxisG
+  //   .append("image")
+  //   .attr("xlink:href", "../images/line_icon_blue.svg")
+  //   .attr("class", "legend blue-legend")
+  //   .attr("y", -112)
+  //   .attr("x", -194)
+  //   .attr("transform", `rotate(270)`)
+  //   .attr("width", "27px")
+  //   .attr("height", "27px");
+
   const y2AxisG = g.append("g").call(y2Axis);
   // y2AxisG.selectAll('.domain').remove();
 
@@ -147,6 +159,16 @@ async function render(countryIdx) {
     .attr("text-anchor", "middle")
     .text(y2AxisLabel);
 
+  // y2AxisG
+  //   .append("image")
+  //   .attr("xlink:href", "../images/line_icon_orange.svg")
+  //   .attr("class", "legend orange-legend")
+  //   .attr("y", -1190)
+  //   .attr("x", 447)
+  //   .attr("transform", `rotate(90)`)
+  //   .attr("width", "27px")
+  //   .attr("height", "27px");
+
   const xAxisG = g
     .append("g")
     .call(xAxis)
@@ -157,7 +179,7 @@ async function render(countryIdx) {
   xAxisG
     .append("text")
     .attr("class", "axis-label")
-    .attr("y", 65)
+    .attr("y", 52)
     .attr("x", innerWidth / 2)
     .attr("fill", "black")
     .text(xAxisLabel);
