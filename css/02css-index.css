@@ -14,6 +14,18 @@ body {
   /* margin-top: 25%; */
 }
 
+.master-svg {
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: 2s;
+}
+
+.master-svg.fade-out {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: .5s;
+}
+
 .bottom-row {
   width: fit-content;
   margin: 0px auto;

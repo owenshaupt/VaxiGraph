@@ -23,6 +23,7 @@ import {
 
 import { COUNTRY_CODES_OBJ, COUNTRY_CODES_ARR } from "./country_codes";
 import { deleteNodes } from "./delete_nodes";
+// import { removeRender } from './remove_render';
 
 let countryName;
 let incidenceArr = [];
@@ -30,6 +31,7 @@ let coverageArr = [];
 let countryIdx;
 let titleText = "Select a Country Below...";
 let transitioned = false;
+let initialLoaded = false;
 
 const handleChange = e => {
   if (!transitioned) {
@@ -47,12 +49,20 @@ const handleChange = e => {
   incidenceArr = [];
   coverageArr = [];
 
-  selectAll("g > *").remove();
+  if (initialLoaded) {
+    document.querySelector(".master-svg").classList.add("fade-out");
+  }
 
-  render(countryIdx); // line 31 in console (console + 17 = code)
-
+  setTimeout(removeRender, 1500);
   titleText = `${countryName} Polio Incidence`;
 };
+
+function removeRender() {
+  selectAll("g > *").remove();
+  render(countryIdx); // line 31 in console (console + 17 = code)
+  document.querySelector(".master-svg").classList.remove("fade-out");
+  initialLoaded = true;
+}
 
 document
   .getElementById("user-country-select")
