@@ -1,6 +1,15 @@
+.legend-labels.hidden {
+  display: flex;
+  opacity: 0;
+}
+
 .legend-labels {
   display: flex;
-  /* display: none; */
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: 1s;
+  transition-timing-function: ease;
+  transition-delay: .65s;
 }
 
 .legend-label-holder {

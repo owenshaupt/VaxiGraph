@@ -29,8 +29,17 @@ let incidenceArr = [];
 let coverageArr = [];
 let countryIdx;
 let titleText = "Select a Country Below...";
+let transitioned = false;
 
 const handleChange = e => {
+  if (!transitioned) {
+    document
+      .querySelector(".user-country-selector")
+      .classList.remove("initial");
+    document.querySelector(".legend-labels").classList.remove("hidden");
+    transitioned = true;
+  }
+
   const countryCode = e.target.value;
   e.target.blur();
   countryName = COUNTRY_CODES_OBJ[countryCode];
@@ -38,7 +47,7 @@ const handleChange = e => {
   incidenceArr = [];
   coverageArr = [];
 
-  selectAll("svg > *").remove();
+  selectAll("g > *").remove();
 
   render(countryIdx); // line 31 in console (console + 17 = code)
 
@@ -93,8 +102,6 @@ async function render(countryIdx) {
     .nice();
 
   svg
-    // .append("div")
-    // .attr("class", "background-div")
     .append("image")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .attr("width", innerWidth)
