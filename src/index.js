@@ -5,7 +5,6 @@ import {
   scaleLinear,
   scaleTime,
   extent,
-  min,
   max,
   axisLeft,
   axisRight,
@@ -14,11 +13,7 @@ import {
   curveMonotoneX,
   format,
   easeCubic,
-  color,
-  event,
-  mouse,
-  point,
-  bisector
+  mouse
 } from "d3";
 
 import { COUNTRY_CODES_OBJ, COUNTRY_CODES_ARR } from "./country_codes";
@@ -26,8 +21,6 @@ import { deleteNodes } from "./delete_nodes";
 // import { removeRender } from './remove_render';
 
 let countryName;
-let incidenceArr = [];
-let coverageArr = [];
 let countryIdx;
 let titleText = "Select a Country Below...";
 let transitioned = false;
@@ -39,6 +32,7 @@ const handleChange = e => {
       .classList.remove("initial");
     document.querySelector(".legend-labels").classList.remove("hidden");
     document.querySelector(".splash-master").classList.add("hidden");
+    document.querySelector(".splash-p-4-div").classList.add("hidden");
     transitioned = true;
   }
 
@@ -46,8 +40,6 @@ const handleChange = e => {
   e.target.blur();
   countryName = COUNTRY_CODES_OBJ[countryCode];
   countryIdx = COUNTRY_CODES_ARR.indexOf(countryCode);
-  incidenceArr = [];
-  coverageArr = [];
 
   document.querySelector(".master-svg").classList.add("fade-out");
 
@@ -440,42 +432,3 @@ function loadCoverage(countryIdx, dataArr) {
     });
   });
 }
-
-// Loads the first time only
-
-// csv("./data/polio_incidence.csv").then(data => {
-//   const columns = Object.keys(data[0]);
-//   const years = columns
-//     .map(colHeader => {
-//       if (+colHeader) return +colHeader;
-//     })
-//     .filter(header => typeof header === "number");
-
-//   years.forEach(y => {
-//     const obj = {};
-//     obj.year = y;
-//     obj.incidence = +data[0][y];
-//     incidenceArr.push(obj);
-//   });
-
-//   render([]);
-// });
-
-// csv("./data/polio_coverage_estimates.csv").then(data => {
-//   // receiveUserSelection();
-//   const columns = Object.keys(data[0]);
-//   const years = columns
-//     .map(colHeader => {
-//       if (+colHeader) return +colHeader;
-//     })
-//     .filter(header => typeof header === "number");
-
-//   years.forEach(y => {
-//     const obj = {};
-//     obj.year = y;
-//     obj.coverage = +data[0][y];
-//     coverageArr.push(obj);
-//   });
-
-//   render([]);
-// });

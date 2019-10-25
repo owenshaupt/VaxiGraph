@@ -53,17 +53,35 @@
   font-style: italic;
 }
 
+.splash-p-4-div {
+  opacity: 1;
+  width: 271px;
+  overflow: hidden;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.splash-p-4-div.hidden {
+  opacity: 0;
+  width: 0px;
+  overflow: hidden;
+  height: 16px;
+  margin-right: 8px;
+  transition: opacity 1s, width 1s;
+}
+
 .splash-footer {
   width: fit-content;
   position: relative;
-  bottom: -228px;
+  top: -22px;
+  left: -47px;
   display: flex;
 }
 
 .footer-link {
   position: relative;
   top: -3px;
-  margin-left: 8px;
+  margin-right: 8px;
 }
 
 .footer-svg-hover:hover {
