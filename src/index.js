@@ -59,7 +59,6 @@ function removeRender() {
   selectAll("g > *").remove();
   render(countryIdx);
   setTimeout(fadeBackIn, 250);
-  initialLoaded = true;
 }
 
 function fadeBackIn() {
@@ -444,39 +443,39 @@ function loadCoverage(countryIdx, dataArr) {
 
 // Loads the first time only
 
-csv("./data/polio_incidence.csv").then(data => {
-  const columns = Object.keys(data[0]);
-  const years = columns
-    .map(colHeader => {
-      if (+colHeader) return +colHeader;
-    })
-    .filter(header => typeof header === "number");
+// csv("./data/polio_incidence.csv").then(data => {
+//   const columns = Object.keys(data[0]);
+//   const years = columns
+//     .map(colHeader => {
+//       if (+colHeader) return +colHeader;
+//     })
+//     .filter(header => typeof header === "number");
 
-  years.forEach(y => {
-    const obj = {};
-    obj.year = y;
-    obj.incidence = +data[0][y];
-    incidenceArr.push(obj);
-  });
+//   years.forEach(y => {
+//     const obj = {};
+//     obj.year = y;
+//     obj.incidence = +data[0][y];
+//     incidenceArr.push(obj);
+//   });
 
-  render([]);
-});
+//   render([]);
+// });
 
-csv("./data/polio_coverage_estimates.csv").then(data => {
-  // receiveUserSelection();
-  const columns = Object.keys(data[0]);
-  const years = columns
-    .map(colHeader => {
-      if (+colHeader) return +colHeader;
-    })
-    .filter(header => typeof header === "number");
+// csv("./data/polio_coverage_estimates.csv").then(data => {
+//   // receiveUserSelection();
+//   const columns = Object.keys(data[0]);
+//   const years = columns
+//     .map(colHeader => {
+//       if (+colHeader) return +colHeader;
+//     })
+//     .filter(header => typeof header === "number");
 
-  years.forEach(y => {
-    const obj = {};
-    obj.year = y;
-    obj.coverage = +data[0][y];
-    coverageArr.push(obj);
-  });
+//   years.forEach(y => {
+//     const obj = {};
+//     obj.year = y;
+//     obj.coverage = +data[0][y];
+//     coverageArr.push(obj);
+//   });
 
-  render([]);
-});
+//   render([]);
+// });
