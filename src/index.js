@@ -56,7 +56,7 @@ const handleChange = e => {
 };
 
 function removeRender() {
-  selectAll("g > *").remove();
+  selectAll("svg > *").remove();
   render(countryIdx);
   setTimeout(fadeBackIn, 250);
 }
