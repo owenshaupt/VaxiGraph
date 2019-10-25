@@ -8,9 +8,21 @@ body {
 }
 
 .master {
+  opacity: 0;
   display: flex;
   flex-direction: column;
   margin: 0px auto;
+  animation: 2s linear 0.5s page-fade-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .master-svg {
@@ -22,7 +34,7 @@ body {
 .master-svg.fade-out {
   opacity: 0;
   transition-property: opacity;
-  transition-duration: .5s;
+  transition-duration: 0.5s;
 }
 
 .bottom-row {

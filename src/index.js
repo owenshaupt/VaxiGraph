@@ -31,7 +31,6 @@ let coverageArr = [];
 let countryIdx;
 let titleText = "Select a Country Below...";
 let transitioned = false;
-let initialLoaded = false;
 
 const handleChange = e => {
   if (!transitioned) {
@@ -50,9 +49,7 @@ const handleChange = e => {
   incidenceArr = [];
   coverageArr = [];
 
-  if (initialLoaded) {
-    document.querySelector(".master-svg").classList.add("fade-out");
-  }
+  document.querySelector(".master-svg").classList.add("fade-out");
 
   setTimeout(removeRender, 1500);
   titleText = `${countryName} Polio Incidence`;
@@ -60,9 +57,13 @@ const handleChange = e => {
 
 function removeRender() {
   selectAll("g > *").remove();
-  render(countryIdx); // line 31 in console (console + 17 = code)
-  document.querySelector(".master-svg").classList.remove("fade-out");
+  render(countryIdx);
+  setTimeout(fadeBackIn, 250);
   initialLoaded = true;
+}
+
+function fadeBackIn() {
+  document.querySelector(".master-svg").classList.remove("fade-out");
 }
 
 document

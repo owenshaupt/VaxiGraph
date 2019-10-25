@@ -46,3 +46,37 @@
   font-family: "beatrice_regular";
   padding-bottom: 4px;
 }
+
+.splash-p-4 {
+  font-size: 16px;
+  font-family: "beatrice_bold";
+  font-style: italic;
+}
+
+.splash-footer {
+  width: fit-content;
+  position: relative;
+  bottom: -228px;
+  display: flex;
+}
+
+.footer-link {
+  position: relative;
+  top: -3px;
+  margin-left: 8px;
+}
+
+.footer-svg-hover:hover {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 0.65s;
+}
+
+.footer-svg-hover {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: 0.6s;
+}
