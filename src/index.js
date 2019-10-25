@@ -39,6 +39,7 @@ const handleChange = e => {
       .querySelector(".user-country-selector")
       .classList.remove("initial");
     document.querySelector(".legend-labels").classList.remove("hidden");
+    document.querySelector(".splash-master").classList.add("hidden");
     transitioned = true;
   }
 

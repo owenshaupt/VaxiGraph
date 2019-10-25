@@ -1,0 +1,48 @@
+.splash-master {
+  position: absolute;
+  padding: 20px;
+  z-index: 200;
+}
+
+.splash-master.hidden {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+  position: absolute;
+  padding: 20px;
+  z-index: -5;
+}
+
+.splash-h1 {
+  font-size: 96px;
+  font-family: "neue-droschke";
+  text-decoration: underline;
+}
+
+.splash-p-1 {
+  font-size: 36px;
+  font-family: "gliko_modern_m";
+  padding-bottom: 4px;
+}
+
+.who-link {
+  color: #0a2979;
+  transition: color 0.5s ease 0s;
+}
+
+.who-link:hover {
+  color: #f34616;
+  transition: color 0.3s ease 0s;
+}
+
+.splash-p-2 {
+  font-size: 24px;
+  font-family: "beatrice_semibold";
+  padding-bottom: 4px;
+}
+
+.splash-p-3 {
+  font-size: 18px;
+  font-family: "beatrice_regular";
+  padding-bottom: 4px;
+}
