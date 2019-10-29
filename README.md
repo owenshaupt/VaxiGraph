@@ -31,7 +31,7 @@ VaxiGraph is an interactive visualization of international polio incidence vs. v
 - Any country can be selected and the WHO's data will appear on the graph, following an `onchange` event.
 
 <p width="350" align="center">
-  <img src="./images/readme_assets/country_select.gif" width="350">
+  <img src="./images/readme_assets/country_select.gif" width="800">
 </p>
 
 ---
@@ -39,7 +39,7 @@ VaxiGraph is an interactive visualization of international polio incidence vs. v
 ### Hovering Line Readout
 
 <p width="450" align="center">
-  <img src="./images/readme_assets/line_hover.gif" width="450">
+  <img src="./images/readme_assets/hover_line.gif" width="375">
 </p>
 
 - Using D3, data values are interpolated based on position of mouse when the `mousemove` event fires above the graph.
