@@ -1,11 +1,5 @@
 # VaxiGraph
 
-<p width="700" align="center">
-  <img src="./frontend/src/assets/images/readme/splash.gif" width="700">
-</p>
-
----
-
 [Visit VaxiGraph](https://owenhaupt.io/VaxiGraph/)
 
 VaxiGraph is an interactive visualization of international polio incidence vs. vaccination rate over time, by country.
