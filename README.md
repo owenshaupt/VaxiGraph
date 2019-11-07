@@ -54,7 +54,7 @@ select(".mouse-line").attr("d", () => {
 - The data at the x-value is also displayed along the colored graph lines.
 
 ```js
-// where [i] specifies the blue or orange line
+// when [i] specifies the orange line
 if (lines[i].getAttribute("class") === "coverage-path") {
   select(this)
     .select(".moving-label")
@@ -62,7 +62,7 @@ if (lines[i].getAttribute("class") === "coverage-path") {
     .text(`${y2Scale.invert(pos.y).toFixed(2)}%`);
 }
 
-// where i specifies the blue or orange line
+// when [i] specifies the blue line
 if (lines[i].getAttribute("class") === "incidence-path") {
   select(this)
     .select(".moving-label")
